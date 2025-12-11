@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Repaso — Nombres de números en francés (0–100)</title>
+    <!-- Incluye Tailwind CSS para clases de utilidad -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Paleta de colores: Azul Principal y Amarillo de Acento */
+        :root{
+            --primary-blue: #1A5276; /* Azul Oscuro Elegante */
+            --light-blue: #3498DB;  /* Azul para acentos */
+            --accent-yellow: #FFC107; /* Amarillo Vivo */
+            --bg: #ECF0F1; /* Fondo muy claro (gris azulado suave) */
+            --card-bg: #FFFFFF; /* Fondo de tarjeta principal */
+            --text: #2C3E50; /* Texto oscuro */
+            --muted: #95A5A6; /* Gris para texto muted */
+            --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.12);
+            --shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.15);
+            --radius: 10px;
+        }
+        
+        body{
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Estilos generales para el layout */
+        .container {
+            max-width: 1000px;
+        }
+
+        /* Estilo base para tarjetas/paneles */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-subtle);
+            padding: 20px;
+        }
+
+        /* Botones primarios (Azul/Amarillo) */
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            transition: background-color 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+        .btn-primary:hover {
+            background-color: #144563; /* Azul ligeramente más oscuro */
+            box-shadow: var(--shadow-hover);
+        }
+        .btn-primary:disabled {
+            background-color: var(--muted);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Botones secundarios (Amarillo/Azul) */
+        .btn-secondary {
+            background-color: var(--accent-yellow);
+            color: var(--primary-blue);
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            transition: background-color 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+        .btn-secondary:hover {
+            background-color: #FFD54F; /* Amarillo ligeramente más claro */
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Inputs de texto y select */
+        input[type="number"], input[type="text"], select {
+            border: 2px solid var(--muted);
+            border-radius: var(--radius);
+            padding: 10px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        input:focus, select:focus {
+            border-color: var(--light-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Estilos específicos para la sección de progreso */
+        #progress-bar-container {
+            height: 10px;
+            background-color: #D5DBDB;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background-color: var(--light-blue);
+            transition: width 0.3s ease-in-out;
+        }
+
+        /* Estilos para el feedback */
+        #feedback {
+            font-weight: 700;
+            min-height: 24px;
+        }
+
+        /* Estilo para el botón de altavoz */
+        #speak-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 10px;
+        }
+        #speak-btn svg {
+            color: var(--primary-blue);
+            transition: color 0.2s;
+        }
+        #speak-btn:hover svg {
+            color: var(--light-blue);
+        }
+
+        /* Responsive layout for options and main content */
+        @media (min-width: 640px) {
+            #main-layout {
+                grid-template-columns: 3fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="p-4 sm:p-8">
+    <div class="container mx-auto space-y-8">
+        <!-- Encabezado con Logo y Título -->
+        <header class="flex flex-col sm:flex-row justify-between items-center p-4 card mb-8">
+            <!-- LOGO: Reemplaza esta URL con la URL de tu logo -->
+            <img id="logo" 
+                 src="https://raw.githubusercontent.com/google/material-design-icons/master/png/action/all_inclusive_black/2x/baseline_all_inclusive_black_48dp.png" 
+                 alt="Logo de la Aplicación" 
+                 class="w-auto h-12 rounded-full p-1 bg-white border-2 border-primary-blue"
+                 onerror="this.onerror=null; this.src='https://placehold.co/150x50/1A5276/FFC107?text=LOGO+APP';"
+            >
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-center text-primary-blue mt-4 sm:mt-0">
+                Dictado de Números en Francés
+            </h1>
+            <div class="h-12 w-0 sm:w-12"></div> <!-- Spacer para alinear el título -->
+        </header>
+
+        <!-- Contenido principal y barra lateral -->
+        <main id="main-layout" class="grid grid-cols-1 gap-8 sm:grid-cols-4">
+            
+            <!-- Bloque Principal de la Aplicación -->
+            <section class="card sm:col-span-3 space-y-6">
+                <h2 id="session-summary" class="text-xl font-semibold text-center text-primary-blue">
+                    Sesión de 0 a 100
+                </h2>
+
+                <!-- Barra de Progreso -->
+                <div id="progress-bar-container">
+                    <div id="progress-bar" style="width: 0%;"></div>
+                </div>
+                <div id="progress-info" class="text-sm text-right text-muted">
+                    0/0 completados (0 aciertos, 0 fallos)
+                </div>
+
+                <!-- Zona de Pregunta y Respuesta -->
+                <div id="question-area" class="text-center p-6 border-2 border-dashed border-light-blue rounded-xl space-y-4">
+                    <p id="question-label" class="text-lg text-muted">Escucha el número en francés y escribe la cifra:</p>
+                    <div id="question-display" class="flex justify-center items-center">
+                        <span id="question-text" class="text-5xl font-bold text-text cursor-pointer hover:text-light-blue transition duration-150">
+                            Cargando...
+                        </span>
+                        <!-- Botón de repetir dictado/sonido -->
+                        <button id="speak-btn" title="Repetir Dictado (Espacio)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.98 7-4.66 7-8.77s-2.99-7.79-7-8.77z"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Zona de Input y Botones -->
+                <div class="space-y-4">
+                    <input type="text" id="answer-input" placeholder="Tu respuesta (ej. 54 o cinquante-quatre)" class="text-center text-xl">
+                    <p id="feedback" class="text-center font-semibold min-h-6"></p>
+
+                    <div class="flex justify-center space-x-4 pt-2">
+                        <button id="submit-btn" class="btn-primary flex-1 max-w-xs">
+                            Comprobar (Enter)
+                        </button>
+                        <button id="show-answer-btn" class="btn-secondary flex-1 max-w-xs">
+                            Mostrar Respuesta
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bloque de Opciones y Estadísticas -->
+            <aside class="card space-y-6 sm:col-span-1">
+                <h3 class="text-xl font-bold text-primary-blue">Opciones</h3>
+                <div class="space-y-4">
+                    <!-- Selector de Modo -->
+                    <div>
+                        <label for="mode-select" class="block text-sm font-medium mb-1">Modo de Práctica</label>
+                        <select id="mode-select" class="w-full">
+                            <option value="dict-french">Escuchar Francés -> Escribir Cifra</option>
+                            <option value="dict-reverse">Ver Cifra -> Escribir Francés</option>
+                        </select>
+                    </div>
+
+                    <!-- Botón de Repetir Fallos -->
+                    <div>
+                        <button id="repeat-missed" class="btn-secondary w-full">
+                            Repetir Fallos de esta Sesión
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Estadísticas Globales -->
+                <div class="space-y-2">
+                    <h3 class="text-xl font-bold text-primary-blue border-t pt-4">Historial Global</h3>
+                    <p id="global-stats-text" class="text-sm">
+                        Total: 0 | Aciertos: 0 | Fallos: 0 | Ratio: 0%
+                    </p>
+                    <button id="reset-stats-btn" class="text-xs text-red-500 hover:text-red-700 transition duration-150">
+                        Borrar Estadísticas Globales
+                    </button>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Pie de página -->
+        <footer class="text-center text-sm text-muted pt-8">
+            <p>Aplicación de Repaso por (Tu Nombre) - Desarrollado para práctica de Francés.</p>
+        </footer>
+    </div>
+
+    <!-- Script de la Aplicación -->
+    <script>
+        // --- CONSTANTES GLOBALES ---
+        const MIN_NUMBER = 0;
+        const MAX_NUMBER = 100; // LIMITADO A 100
+        const DEFAULT_COUNT = 20; // Número de preguntas por sesión
+
+        // --- REFERENCIAS DOM ---
+        const logo = document.getElementById('logo');
+        const modeSelect = document.getElementById('mode-select');
+        const questionLabel = document.getElementById('question-label');
+        const questionText = document.getElementById('question-text');
+        const speakBtn = document.getElementById('speak-btn');
+        const answerInp = document.getElementById('answer-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const showAnswerBtn = document.getElementById('show-answer-btn');
+        const feedback = document.getElementById('feedback');
+        const progressBar = document.getElementById('progress-bar');
+        const progressInfo = document.getElementById('progress-info');
+        const sessionSummary = document.getElementById('session-summary');
+        const repeatMissed = document.getElementById('repeat-missed');
+        const globalStatsText = document.getElementById('global-stats-text');
+        const resetStatsBtn = document.getElementById('reset-stats-btn');
+
+        // --- ESTADO GLOBAL ---
+        let state = {
+            order: [], // Lista de números para la sesión
+            index: 0, // Índice de la pregunta actual
+            mode: 'dict-french', // Modo actual
+            answers: [], // [0: incorrecto, 1: correcto, 2: omitido]
+            missed: [], // Lista de números fallados en la sesión actual
+            stats: {
+                total: 0,
+                correct: 0,
+                incorrect: 0
+            }
+        };
+
+        // Almacenamiento en caché de la conversión de números a francés
+        const MAP_CACHE = {};
+
+        // --- UTILIDADES DE PERSISTENCIA ---
+        const STORAGE_KEY = 'french_numbers_app_state';
+
+        /**
+         * Carga el estado global guardado en localStorage.
+         */
+        function loadState() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (parsed.stats) {
+                        state.stats = parsed.stats;
+                    }
+                    // La sesión de orden, index, missed y answers se reinicia al cargar
+                }
+            } catch (error) {
+                console.error("Error cargando estado:", error);
+                // Si falla, se queda con el estado inicial
+            }
+        }
+
+        /**
+         * Guarda las estadísticas globales en localStorage.
+         */
+        function saveStats() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({ stats: state.stats }));
+            } catch (error) {
+                console.error("Error guardando estadísticas:", error);
+            }
+        }
+
+        /**
+         * Renderiza las estadísticas globales en la interfaz.
+         */
+        function renderSavedStats() {
+            const { total, correct, incorrect } = state.stats;
+            const ratio = total > 0 ? ((correct / total) * 100).toFixed(1) : 0;
+            globalStatsText.textContent = 
+                `Total: ${total} | Aciertos: ${correct} | Fallos: ${incorrect} | Ratio: ${ratio}%`;
+        }
+
+        /**
+         * Borra todas las estadísticas globales y reinicia la interfaz.
+         */
+        function resetGlobalStats() {
+            // Reemplazo de window.confirm() por una solución de consola/feedback
+            console.warn("Estadísticas globales borradas.");
+            state.stats = { total: 0, correct: 0, incorrect: 0 };
+            saveStats();
+            renderSavedStats();
+            // Opcional: reiniciar la sesión actual
+            startNewSession(); 
+        }
+
+        // --- UTILIDADES DE VOZ Y CONVERSIÓN ---
+
+        /**
+         * Inicializa y prepara la voz para la síntesis de voz.
+         * @returns {SpeechSynthesisVoice|null} La voz francesa o null si no se encuentra.
+         */
+        function getFrenchVoice() {
+            const voices = speechSynthesis.getVoices();
+            // Buscar la voz de francés (fr-FR)
+            let frenchVoice = voices.find(voice => voice.lang === 'fr-FR');
+            
+            // Si la lista está vacía, esperar a que cargue
+            if (!frenchVoice && voices.length === 0) {
+                return null; // Necesitamos el evento 'voiceschanged'
+            }
+
+            // Si no se encuentra 'fr-FR', intentar con la primera que parezca francesa
+            if (!frenchVoice) {
+                frenchVoice = voices.find(voice => voice.lang.startsWith('fr'));
+            }
+            return frenchVoice || null;
+        }
+
+        /**
+         * Reproduce el texto proporcionado usando la voz francesa.
+         * @param {string} text El texto a dictar (debe ser el nombre del número en francés).
+         */
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            const frenchVoice = getFrenchVoice();
+            
+            if (frenchVoice) {
+                utterance.voice = frenchVoice;
+            } else {
+                // Fallback: usar el idioma por defecto y esperar a que las voces carguen
+                utterance.lang = 'fr-FR'; 
+            }
+            
+            // Establecer propiedades de velocidad y tono
+            utterance.rate = 0.9; 
+            utterance.pitch = 1.0; 
+
+            // Manejar si las voces no están listas
+            if (speechSynthesis.getVoices().length === 0) {
+                console.warn("Voces de síntesis de voz no cargadas aún. Usando valores por defecto.");
+            }
+
+            speechSynthesis.speak(utterance);
+        }
+
+        // Escuchar el evento de cambio de voces para reintentar la obtención si falló inicialmente
+        window.speechSynthesis.onvoiceschanged = () => {
+            // Si el modo requiere voz (dict-french), se puede reintentar si se necesita
+            if (state.mode === 'dict-french' && state.order[state.index] !== undefined) {
+                speakBtn.click(); // Reintentar dictado si estábamos esperando voz
+            }
+        };
+
+        // --- LÓGICA DE CONVERSIÓN DE NÚMEROS A FRANCÉS ---
+        
+        // Tablas de conversión (simplificadas para el rango 0-100)
+        const units = ["", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf"];
+        const teens = ["dix", "onze", "douze", "treize", "quatorze", "quinze", "seize", "dix-sept", "dix-huit", "dix-neuf"];
+        const tens = ["", "", "vingt", "trente", "quarante", "cinquante", "soixante"];
+
+        /**
+         * Función central para números < 100, con la lógica corregida para 70-99.
+         * @param {number} n El número (0-99).
+         * @returns {string} El número en francés.
+         */
+        function convertLessThanOneHundred(n) {
+            if (n < 10) return units[n];
+            if (n >= 10 && n < 20) return teens[n - 10];
+
+            const t = Math.floor(n / 10);
+            const u = n % 10;
+
+            if (t <= 6) { // 20 a 69
+                const base = tens[t];
+                if (u === 0) return base;
+                // 'vingt-et-un', 'trente-et-un', 'quarante-et-un', 'cinquante-et-un', 'soixante-et-un'
+                if (u === 1 && t !== 7) return base + "-et-un"; 
+                return base + "-" + units[u];
+            } else { // 70 a 99 (reglas especiales)
+                
+                if (t === 7) { // 70-79 (soixante-dix a soixante-dix-neuf)
+                    // La base es 60, el resto es 10 a 19
+                    const remainder = n - 60; 
+                    return "soixante-" + convertLessThanOneHundred(remainder);
+                } else if (t === 8) { // 80-89 (quatre-vingts a quatre-vingt-neuf)
+                    // La base es 80, el resto es 0 a 9
+                    const remainder = n - 80;
+                    if (remainder === 0) return "quatre-vingts";
+                    return "quatre-vingt-" + convertLessThanOneHundred(remainder);
+                } else if (t === 9) { // 90-99 (quatre-vingt-dix a quatre-vingt-dix-neuf)
+                    // La base es 80, el resto es 10 a 19
+                    const remainder = n - 80; 
+                    return "quatre-vingt-" + convertLessThanOneHundred(remainder);
+                }
+            }
+            return ""; // Fallback
+        }
+
+        /**
+         * Convierte un número (0-100) a su forma escrita en francés.
+         * @param {number} n El número a convertir.
+         * @returns {string} El número en francés.
+         */
+        function numberToFrench(n) {
+            if (MAP_CACHE[n]) return MAP_CACHE[n];
+
+            if (n < 100) {
+                const result = convertLessThanOneHundred(n);
+                MAP_CACHE[n] = result;
+                return result;
+            }
+
+            if (n === 100) {
+                MAP_CACHE[100] = "cent";
+                return "cent";
+            }
+            
+            // Lógica para > 100 (aunque MAX_NUMBER es 100)
+            if (n > 100 && n <= 2000) {
+                // ... (El código de más de 100 se mantiene, aunque no se usa en este rango)
+                
+                if (n > 100 && n < 1000) {
+                    const h = Math.floor(n / 100);
+                    const remainder = n % 100;
+                    let result = "";
+
+                    if (h === 1) {
+                        result = "cent";
+                    } else {
+                        result = units[h] + "-cents";
+                    }
+
+                    if (remainder === 0) {
+                        if (h === 1) {
+                            result = "cent";
+                        } else {
+                             if (h > 1 && remainder === 0) {
+                                 result = units[h] + "-cents";
+                            } else if (h > 1 && remainder !== 0) {
+                                 result = units[h] + "-cent";
+                            }
+                        }
+                    }
+                    
+                    if (h > 1 && remainder !== 0) {
+                        result = units[h] + "-cent";
+                    }
+
+                    if (remainder > 0) {
+                        result += "-" + convertLessThanOneHundred(remainder);
+                    }
+
+                    MAP_CACHE[n] = result.replace(/s-cent/g, 's-cent');
+                    return result;
+                }
+
+                if (n >= 1000 && n <= 2000) {
+                    if (n === 1000) {
+                        MAP_CACHE[1000] = "mille";
+                        return "mille";
+                    }
+                    if (n === 2000) {
+                        MAP_CACHE[2000] = "deux-mille";
+                        return "deux-mille";
+                    }
+
+                    const m = Math.floor(n / 1000);
+                    const remainder = n % 1000;
+                    let result = "";
+
+                    if (m === 1) {
+                        result = "mille";
+                    } else {
+                        result = numberToFrench(m) + "-mille";
+                    }
+
+                    if (remainder > 0) {
+                        result += "-" + numberToFrench(remainder);
+                    }
+
+                    MAP_CACHE[n] = result;
+                    return result;
+                }
+            }
+
+            return n.toString(); // Fallback para números fuera de rango
+        }
+
+        // --- LÓGICA DE LA SESIÓN ---
+
+        /**
+         * Genera una lista aleatoria de números para la sesión.
+         * @returns {number[]} Array de números.
+         */
+        function generateRandomSessionOrder() {
+            const numbers = [];
+            for (let i = 0; i < DEFAULT_COUNT; i++) {
+                // Generar un número aleatorio entre MIN_NUMBER y MAX_NUMBER (inclusive)
+                numbers.push(Math.floor(Math.random() * (MAX_NUMBER - MIN_NUMBER + 1)) + MIN_NUMBER);
+            }
+            return numbers;
+        }
+
+        /**
+         * Inicia una nueva sesión de práctica.
+         */
+        function startNewSession() {
+            state.order = generateRandomSessionOrder();
+            state.index = 0;
+            state.answers = Array(state.order.length).fill(0); // 0: no contestado
+            state.missed = [];
+            
+            // Forzar una actualización de la pregunta
+            updateQuestion(true); 
+            updateProgress();
+            sessionSummary.textContent = `Sesión de ${MIN_NUMBER} a ${MAX_NUMBER} (${state.order.length} números)`;
+            feedback.textContent = '';
+        }
+
+        /**
+         * Actualiza la interfaz de usuario para mostrar la pregunta actual.
+         * @param {boolean} forceSpeak Si es true, fuerza la dictado de la nueva pregunta.
+         */
+        function updateQuestion(forceSpeak = false) {
+            const currentNumber = state.order[state.index];
+            const total = state.order.length;
+
+            if (currentNumber === undefined) {
+                // Sesión terminada
+                questionText.textContent = "¡Sesión Terminada!";
+                questionLabel.textContent = "¡Felicidades!";
+                answerInp.value = '';
+                answerInp.disabled = true;
+                submitBtn.disabled = true;
+                showAnswerBtn.disabled = true;
+                speakBtn.style.display = 'none';
+                feedback.innerHTML = '<span class="text-green-600">Has completado todos los números de esta sesión. Revisa tus fallos o inicia una nueva.</span>';
+                return;
+            }
+
+            // Resetear interfaz
+            answerInp.value = '';
+            answerInp.disabled = false;
+            submitBtn.disabled = false;
+            showAnswerBtn.disabled = false;
+            feedback.textContent = '';
+            speakBtn.style.display = 'inline-flex';
+            answerInp.type = (state.mode === 'dict-french') ? 'number' : 'text'; // Tipo de input según el modo
+            
+            // Actualizar placeholder del input según el nuevo rango
+            answerInp.placeholder = (state.mode === 'dict-french') ? "Escribe la cifra (ej. 54)" : "Escribe en francés (ej. cinquante-quatre)";
+
+            // Lógica de visualización por modo
+            switch (state.mode) {
+                case 'dict-french':
+                    questionLabel.textContent = "Escucha el número en francés y escribe la cifra:";
+                    questionText.textContent = '...'; // Ocultar la cifra hasta que el usuario lo pida
+                    if (forceSpeak) {
+                        // Dictar el número en francés
+                        const frenchName = numberToFrench(currentNumber);
+                        speak(frenchName);
+                        questionText.textContent = 'Haz click aquí o en 🔊 para repetir';
+                        questionText.classList.add('cursor-pointer', 'hover:text-light-blue');
+                        speakBtn.disabled = false;
+                    }
+                    showAnswerBtn.textContent = 'Mostrar Respuesta (Cifra)';
+                    break;
+                case 'dict-reverse':
+                    questionLabel.textContent = "Escribe el nombre en francés de la cifra:";
+                    questionText.textContent = currentNumber.toString();
+                    questionText.classList.remove('cursor-pointer', 'hover:text-light-blue');
+                    speakBtn.disabled = true;
+                    speakBtn.style.display = 'none';
+                    showAnswerBtn.textContent = 'Mostrar Respuesta (Francés)';
+                    break;
+            }
+        }
+
+        /**
+         * Actualiza la barra de progreso y la información de aciertos/fallos de la sesión.
+         */
+        function updateProgress() {
+            const completed = state.answers.filter(a => a !== 0).length;
+            const correct = state.answers.filter(a => a === 1).length;
+            const incorrect = state.answers.filter(a => a === 2).length;
+            const total = state.order.length;
+
+            const percentage = total > 0 ? (completed / total) * 100 : 0;
+            progressBar.style.width = `${percentage}%`;
+            progressInfo.textContent = 
+                `${completed}/${total} completados (${correct} aciertos, ${incorrect} fallos)`;
+        }
+
+        /**
+         * Verifica la respuesta del usuario.
+         */
+        function checkAnswer() {
+            const currentNumber = state.order[state.index];
+            if (currentNumber === undefined) return;
+
+            const userAnswerRaw = answerInp.value.trim().toLowerCase();
+            let isCorrect = false;
+
+            if (state.mode === 'dict-french') {
+                // Comparar cifra (ej: '54') con la cifra correcta (54)
+                const userAnswerInt = parseInt(userAnswerRaw, 10);
+                isCorrect = userAnswerInt === currentNumber;
+            } else if (state.mode === 'dict-reverse') {
+                // Comparar texto en francés
+                const correctAnswerFrench = numberToFrench(currentNumber);
+                // Normalizar la respuesta: quitar espacios extras, quitar tildes, simplificar guiones.
+                const normalize = (text) => text.replace(/\s+/g, ' ').replace(/-/g, '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+                
+                const normalizedUser = normalize(userAnswerRaw);
+                const normalizedCorrect = normalize(correctAnswerFrench);
+
+                // Permitir algunas tolerancias de escritura (ej: sin guiones o tildes)
+                isCorrect = normalizedUser === normalizedCorrect || 
+                            userAnswerRaw === correctAnswerFrench.replace(/-/g, ' '); // Aceptar espacios en lugar de guiones
+            }
+
+            if (isCorrect) {
+                feedback.innerHTML = '<span class="text-green-600">¡Correcto!</span>';
+                state.answers[state.index] = 1; // Acierto
+                state.stats.total++;
+                state.stats.correct++;
+                saveStats();
+                setTimeout(() => nextQuestion(), 1000); // Avanzar después de un breve retraso
+            } else {
+                feedback.innerHTML = '<span class="text-red-600">Incorrecto. ¡Inténtalo de nuevo!</span>';
+                state.missed.push(currentNumber); // Registrar fallo
+                state.stats.total++;
+                state.stats.incorrect++;
+                saveStats();
+                // No avanzar, permitir otro intento o ver la respuesta
+            }
+            renderSavedStats();
+        }
+
+        /**
+         * Avanza a la siguiente pregunta de la sesión.
+         */
+        function nextQuestion() {
+            state.index++;
+            updateQuestion(true);
+            updateProgress();
+        }
+
+        /**
+         * Muestra la respuesta correcta.
+         */
+        function showAnswer() {
+            const currentNumber = state.order[state.index];
+            if (currentNumber === undefined) return;
+
+            // Marcar como omitido (fallo) si no se había respondido
+            if (state.answers[state.index] === 0) {
+                state.answers[state.index] = 2; // Omitido/Fallado
+                state.missed.push(currentNumber); // Registrar el fallo
+                state.stats.total++;
+                state.stats.incorrect++;
+                saveStats();
+                renderSavedStats();
+            }
+
+            const frenchName = numberToFrench(currentNumber);
+            
+            // Mostrar la respuesta según el modo
+            if (state.mode === 'dict-french') {
+                questionText.textContent = currentNumber.toString();
+                feedback.innerHTML = `<span class="text-orange-600">La respuesta es: ${currentNumber} (${frenchName})</span>`;
+            } else { // dict-reverse
+                feedback.innerHTML = `<span class="text-orange-600">La respuesta es: ${frenchName} (${currentNumber})</span>`;
+                // Mostrar la cifra original por si la oculta:
+                questionText.textContent = currentNumber.toString(); 
+            }
+
+            // Deshabilitar input y botones
+            answerInp.disabled = true;
+            submitBtn.disabled = true;
+            showAnswerBtn.disabled = true;
+            
+            // Botón para la siguiente pregunta
+            feedback.insertAdjacentHTML('beforeend', '<button id="next-btn" class="btn-primary mt-2 ml-4">Siguiente</button>');
+            document.getElementById('next-btn').addEventListener('click', () => {
+                nextQuestion();
+            });
+        }
+
+        // --- MANEJADORES DE EVENTOS ---
+
+        // Iniciar nueva sesión al cambiar el modo
+        modeSelect.addEventListener('change', (e) => {
+            state.mode = e.target.value;
+            startNewSession();
+        });
+
+        // Botón de submit
+        submitBtn.addEventListener('click', checkAnswer);
+
+        // Botón de mostrar respuesta
+        showAnswerBtn.addEventListener('click', showAnswer);
+
+        // Botón de repetir dictado
+        speakBtn.addEventListener('click', () => {
+            const n = state.order[state.index];
+            if(n===undefined) {
+                feedback.innerHTML = '<span style="color: red;">No hay una pregunta activa.</span>';
+                return;
+            }
+            const frenchName = numberToFrench(n);
+            speak(frenchName);
+        });
+
+        // Repetir dictado al hacer click en el texto de la pregunta (solo modo dict-french)
+        questionText.addEventListener('click', () => {
+            if (state.mode === 'dict-french' && state.order[state.index] !== undefined) {
+                 speakBtn.click();
+            }
+        });
+
+        // Presionar Enter para enviar
+        answerInp.addEventListener('keydown', (e)=>{ 
+            if(e.key==='Enter'){ 
+                e.preventDefault(); 
+                submitBtn.click(); 
+            } 
+        });
+
+        // Botón de repetir fallos
+        repeatMissed.addEventListener('click', ()=>{ 
+            const uniqueMissed = state.missed.filter((value, index, self) => self.indexOf(value) === index);
+            if(!uniqueMissed.length){ 
+                feedback.innerHTML = '<span class="text-red-600">¡No tienes fallos únicos para repetir en esta sesión!</span>';
+                return; 
+            } 
+            state.order = uniqueMissed.slice(); 
+            state.index=0; 
+            state.missed=[]; 
+            state.answers=Array(state.order.length).fill(0); 
+            updateQuestion(true); 
+            updateProgress(); 
+            sessionSummary.textContent='Repitiendo fallos únicos de la sesión anterior.'; 
+            feedback.textContent = '';
+        });
+
+        // Botón de reset de estadísticas globales
+        resetStatsBtn.addEventListener('click', resetGlobalStats);
+
+        // --- INICIALIZACIÓN ---
+        window.onload = function() {
+            // Cargar estado inicial y estadísticas
+            loadState();
+            renderSavedStats();
+            
+            // Iniciar la primera sesión
+            // Asegurarse de que el modo es el seleccionado por defecto en el select
+            state.mode = modeSelect.value; 
+            startNewSession();
+        };
+
+        // Forzar la precarga de la voz (opcional, ayuda a que esté lista antes)
+        if (speechSynthesis.onvoiceschanged === null) {
+            speechSynthesis.onvoiceschanged = () => {};
+        }
+
+    </script>
+</body>
+</html>
